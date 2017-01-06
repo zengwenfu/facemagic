@@ -1,0 +1,23 @@
+{
+  "name": "facemagic",
+  "version": "1.0.0",
+  "description": "菲麦前端",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zengwenfu/facemagic.git"
+  },
+  "author": "zengwenfu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zengwenfu/facemagic/issues"
+  },
+  "homepage": "https://github.com/zengwenfu/facemagic#readme",
+  "devDependencies": {
+    "cheerio": "^0.22.0",
+    "superagent": "^3.3.1"
+  }
+}
