@@ -2,6 +2,6 @@
 
 var jian = require('../../app/factory/spiders/jian.js');
 
-jian().then(function() {
-    console.log('ok');
+jian().then(function(list) {
+    console.log(list);
 });
