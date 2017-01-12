@@ -5,8 +5,11 @@ var request = require('../../utils/request.js');
  * 默认参数
  */
 var defaultOpts = {
+    startPage: 1, //默认从第一页开始
     pages: 10, //默认10页
     rate: 5, //默认并发查询5页
+    url: false, //访问地址
+    analyse: false,//分析方法
 }
 
 /**
@@ -20,8 +23,9 @@ function SeekList(options) {
     /**
      *  查询索引
      */
-    this.times = 1;
     this.options = Object.assign(defaultOpts, options);
+    this.times = this.options.startPage; //开始页
+    this.totalPage = this.options.pages + this.options.startPage - 1; //结束页
 }
 
 /**
@@ -43,13 +47,7 @@ SeekList.prototype.createPromise = function(i) {
     });
 }
 
-/**
- *  处理结果
- */
-SeekList.prototype.analyse = function(result) {
-    console.log(result.length);
-    //TODO入库
-}
+
 
 /**
  *  递归的请求，每次并发的请求options.rate个
@@ -58,11 +56,9 @@ SeekList.prototype.seek = function(callback) {
     var self = this;
     //并发查询页数
     var rate = self.options.rate;
-    //总页数
-    var totalPage = self.options.pages;
     var promises = [];
     //创建rate个查询
-    for(var i = 0; i < rate && self.times <= totalPage; i++) {
+    for(var i = 0; i < rate && self.times <= self.totalPage; i++) {
         promises.push(self.createPromise(self.times));
         self.times++;
     }
@@ -70,13 +66,13 @@ SeekList.prototype.seek = function(callback) {
 
     var promise = Promise.all(promises);
     promise.then(function(result) {
-        console.log("seekList totals:" + (self.times-1));
+        console.log("seekList totals:" + (self.times - self.options.startPage));
         //将爬取到的东西送去处理
-        self.analyse(result);
-        if (self.times <= totalPage) { //未爬完，递归的爬
+        self.options.analyse && self.options.analyse(result);
+        if (self.times <= self.totalPage) { //未爬完，递归的爬
             self.seek(callback);
         } else { //爬完了，执行回调
-            callback(pages);
+            callback && callback();
         }
     });
 }
