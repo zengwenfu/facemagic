@@ -14,6 +14,12 @@ seekJian().then(function(articles) {
     });
     var now = dateUtil.format(new Date(), 'yyyyMMdd');
     console.log(now);
-    fs.writeFile('./jianTops/'+now+'.md', content, function(err) {
+    fs.writeFile('./jianTops/' + now + '.md', content, function(err) {
     });
+
+
+    var adc = nunjucks.render('./templates/ad.md', {
+        articles: articles
+    });
+    fs.writeFile('./jianTops/' + now + '-ad.md', adc, function(err){} );
 });

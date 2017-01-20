@@ -28,8 +28,17 @@ var topics = [
 var topicsIndex = 0;
 var lastWeekStartDate = false;
 var lastWeekEndDate = false;
-// 爬到比上周更早的日期的时候停止爬取
+// 停止爬取标志
 var seekFlag = true;
+/**
+ * 由于无法获得收录时间，额最新收入专题的极有可能在很久之前就发布了
+ * 所以记录一个发布时间比上周早的数量
+ * 达到maxEarlyCount了，咱们就认为可以停止爬取了
+ * （一般情况下，发布时间跟收录时间基本类似）
+ */
+var earlyCount = 0;
+var maxEarlyCount = 15;
+
 
 /**
  *  净化text
@@ -97,9 +106,15 @@ function analyse(result) {
 
             //判断日期是否是上周
             var publicDate = dateUtil.format(new Date(publicTime), 'yyyy/MM/dd');
+            console.log(publicDate + ':' + content.find('a.title').attr('href'));
             if (publicDate < lastWeekStartDate || publicDate > lastWeekEndDate) {
                 if (publicDate < lastWeekStartDate) { //爬到比上周更早的日期了，意味着不需要再爬了
-                    seekFlag = false;
+                    //再用累积法做一层保护
+                    earlyCount ++;
+                    if(earlyCount >= maxEarlyCount) {
+                        earlyCount = 0; //重置，给下一个专题用
+                        seekFlag = false;
+                    }
                     // return; 
                     // 这里不return的原因是，文章是按照专题收录时间排序的
                     // 不是按照发布时间排序的（虽然可以认为基本一致）
@@ -115,6 +130,9 @@ function analyse(result) {
                 var likeCount = content.find('.meta a').eq(2).text();
                 var disc = content.find('.abstract').text();
                 
+                
+                
+
                 var item = {
                     author: author,
                     publicTime: publicTime,
@@ -149,7 +167,6 @@ function analyse(result) {
  *  url //专题地址
  */
 function createPromise(startPage, pages, url) {
-
     return new Promise(function(resolve, reject) {
         new Seek({
             url: url,
@@ -169,6 +186,7 @@ function createPromise(startPage, pages, url) {
  *  开始查
  */
 function runSeek(startPage, pages, callback) {
+    console.log(topicsIndex);
     createPromise(startPage, pages, topics[topicsIndex]).then(function(nextPage) {
         try{
             if (seekFlag) { //如果还未查到比上周更早的日期 接着查
@@ -202,6 +220,7 @@ module.exports = function() {
     topicsIndex = 0;
     urlObj = {};
     articleCount = 0;
+    earlyCount = 0;
 
     return new Promise(function(resolve, reject) {
         runSeek(1, 5, function() {
