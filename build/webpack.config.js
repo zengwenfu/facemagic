@@ -7,10 +7,11 @@ var ROOT_PATH = path.resolve(__dirname, '../');
 var SRC_PATH = ROOT_PATH + '/app/client';
 // 产出路径
 var DIST_PATH = ROOT_PATH + '/app/client/dist';
+var hotMiddlewareScript = 'webpack-hot-middleware/client?reload=true';
 
 module.exports = {
     entry: {
-        index: [ROOT_PATH + '/app/client/pages/blog/js/index.js'],
+        index: [ROOT_PATH + '/app/client/pages/blog/js/index.js', hotMiddlewareScript],
         lib: [
             'react', 'react-dom'
         ]
@@ -18,7 +19,7 @@ module.exports = {
     output: {
         path: DIST_PATH,
         filename: '[name].bundle.js',
-        // publicPath: 'http://localhost:5000/'
+        publicPath: 'http://localhost:5000/'
     },
     module: {
         // 加载器配置
@@ -40,6 +41,8 @@ module.exports = {
         //多页面应用，提取公共模块
         new webpack.optimize.CommonsChunkPlugin({
             names: ['lib']
-        })
+        }),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoEmitOnErrorsPlugin()
     ]
 }
