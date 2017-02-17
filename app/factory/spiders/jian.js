@@ -106,7 +106,6 @@ function analyse(result) {
 
             //判断日期是否是上周
             var publicDate = dateUtil.format(new Date(publicTime), 'yyyy/MM/dd');
-            console.log(publicDate + ':' + content.find('a.title').attr('href'));
             if (publicDate < lastWeekStartDate || publicDate > lastWeekEndDate) {
                 if (publicDate < lastWeekStartDate) { //爬到比上周更早的日期了，意味着不需要再爬了
                     //再用累积法做一层保护
@@ -127,7 +126,7 @@ function analyse(result) {
                 var link = content.find('a.title').attr('href');
                 var readCount = content.find('.meta a').eq(0).text();
                 var commentCount = content.find('.meta a').eq(1).text();
-                var likeCount = content.find('.meta a').eq(2).text();
+                var likeCount = content.find('.meta span').eq(0).text();
                 var disc = content.find('.abstract').text();
                 
                 
@@ -186,7 +185,6 @@ function createPromise(startPage, pages, url) {
  *  开始查
  */
 function runSeek(startPage, pages, callback) {
-    console.log(topicsIndex);
     createPromise(startPage, pages, topics[topicsIndex]).then(function(nextPage) {
         try{
             if (seekFlag) { //如果还未查到比上周更早的日期 接着查
