@@ -7,6 +7,7 @@ var webpack = require('webpack');
 var webpackDevMiddleware = require('webpack-dev-middleware');
 var webpackHotMiddleware = require('webpack-hot-middleware');
 var config = require('../build/webpack.config.js');
+var reload = require('reload');
 
 
 var app = express();
@@ -24,11 +25,11 @@ var compiler = webpack(config);
 app.use(webpackDevMiddleware(compiler, {
     publicPath: config.output.publicPath,
     noInfo: true,
-    hot: true,
-    inline: true,
+    // hot: true,
+    // inline: true,
     stats: {
         colors: true,
-        cached: false,
+        // cached: false,
     }
 }));
 
@@ -45,6 +46,8 @@ app.get('/', function(req, res) {
 
 // 创建应用服务器
 var server = http.createServer(app);
+
+reload(server, app);
 
 server.listen('5000', '0.0.0.0', function onStart(err) {
     if (err) {
