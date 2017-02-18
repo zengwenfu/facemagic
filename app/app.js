@@ -8,6 +8,9 @@ var webpackDevMiddleware = require('webpack-dev-middleware');
 var webpackHotMiddleware = require('webpack-hot-middleware');
 var config = require('../build/webpack.config.js');
 var reload = require('reload');
+require('babel-register');
+var render = require('./views/render.js');
+
 
 
 var app = express();
@@ -25,11 +28,11 @@ var compiler = webpack(config);
 app.use(webpackDevMiddleware(compiler, {
     publicPath: config.output.publicPath,
     noInfo: true,
-    // hot: true,
-    // inline: true,
+    hot: true,
+    inline: true,
     stats: {
         colors: true,
-        // cached: false,
+        cached: false,
     }
 }));
 
@@ -41,6 +44,12 @@ app.get('/', function(req, res) {
     res.render('view', {
         slug: 'index.bundle.js'
     });
+});
+
+// get
+app.get('/index', function(req, res) {
+    // const html = ReactDOMServer.renderToString(<Index/>);
+    res.send(render());
 });
 
 

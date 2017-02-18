@@ -11,7 +11,7 @@ var DIST_PATH = ROOT_PATH + '/app/client/dist';
 //reload设置为false,
 //js改动不刷新
 //css改动刷新
-var hotMiddlewareScript = 'webpack-hot-middleware/client?reload=false';
+var hotMiddlewareScript = 'webpack-hot-middleware/client?reload=true';
 
 module.exports = {
     entry: {
