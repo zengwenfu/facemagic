@@ -2,6 +2,7 @@
  *  @author [小虫巨蟹]
  */
 import React, { Component, PropTypes } from 'react';
+const VERSION = require('../../../package.json').version;
 
 class Layout extends Component {
 
@@ -15,15 +16,29 @@ class Layout extends Component {
   //遍历js脚本
   renderScripts() {
     const {scriptUrls} = this.props;
-    let items = [];
+    const host = process.host;
+
+    const lib = `${host}/${VERSION}/lib.bundle.js`;
+    let items = [<script src= {lib} />];
     scriptUrls.map((url, i)=>{
+      url = host + '/' + VERSION + url;
       items.push(<script key={i} src={url} />);
     });
+
+    
+    /**
+     *  开发环境增加reload监听（后台重启的时候能自动刷新）
+     */
+    if(process.env.NODE_ENV === 'dev') {
+      items.push(<script  src={'/reload/reload.js'} />);
+    }
+
     return items;
   }
 
   render() {
     const { title, children } = this.props;
+    const host = process.host;
     return (
       <html>
         <head>
@@ -38,7 +53,6 @@ class Layout extends Component {
         </head>
         <body>
           {children}
-          <script type="text/javascript" src="lib.bundle.js"></script>
           {this.renderScripts()}
         </body>
       </html>

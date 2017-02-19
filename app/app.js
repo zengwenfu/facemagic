@@ -8,62 +8,85 @@ var webpackDevMiddleware = require('webpack-dev-middleware');
 var webpackHotMiddleware = require('webpack-hot-middleware');
 var config = require('../build/webpack.config.js');
 var reload = require('reload');
+// 启动babel转码（解析.babelrc）
 require('babel-register');
-var render = require('./views/render.js');
+var indexRouter = require('./routers/index.js');
+
+// 环境变量
+var env = process.env.NODE_ENV;
+env = env == null ? 'prd' : env;
+
+// 域名配置
+var host = {
+    dev: 'http://localhost:5000',
+    prd: 'http://localhost:5000'
+};
+
+process.host = host[env];
 
 
-
+// 启动express对象
 var app = express();
+//配置路由
+app.use('/', indexRouter);
 
-// view engine setup
-app.set('view engine', 'html');
-app.engine('.html', require('ejs').__express);
-app.set('views', path.join(__dirname, 'views'));
+/**
+ *  开发环境
+ *      1. 启动热更新插件监听client端css、js变更
+ *      2. 通过supervisor监听sever端变更并重启，reload在server端重启阶段刷新前端界面
+ */
+if(env === 'dev') {
+    // webpack编译器
+    var compiler = webpack(config);
+    app.use(webpackDevMiddleware(compiler, {
+        publicPath: config.output.publicPath,
+        noInfo: true,
+        hot: true,
+        inline: true,
+        stats: {
+            colors: true,
+            cached: false,
+        }
+    }));
 
-// app.use(express.static(path.join(__dirname, 'client/dist')));
+    app.use(webpackHotMiddleware(compiler));
 
+    // 创建应用服务器
+    var server = http.createServer(app);
 
-// webpack编译器
-var compiler = webpack(config);
-app.use(webpackDevMiddleware(compiler, {
-    publicPath: config.output.publicPath,
-    noInfo: true,
-    hot: true,
-    inline: true,
-    stats: {
-        colors: true,
-        cached: false,
-    }
-}));
+    // 服务器重启，刷新前端界面
+    reload(server, app);
 
-app.use(webpackHotMiddleware(compiler));
-
-
-// get
-app.get('/', function(req, res) {
-    res.render('view', {
-        slug: 'index.bundle.js'
+    server.listen('5000', '0.0.0.0', function onStart(err) {
+        if (err) {
+            console.log(err);
+        }
+        console.log('启动成功');
     });
-});
+} else { //开发环境，配置static目录，启动服务器
+    app.use(express.static(path.join(__dirname, 'client/dist')));
 
-// get
-app.get('/index', function(req, res) {
-    // const html = ReactDOMServer.renderToString(<Index/>);
-    res.send(render());
-});
+    //webpack编译，编译完成启动服务
+    webpack(config, function() {
+        console.log('编译完成，开始启动node服务');
+        // 创建应用服务器
+        var server = http.createServer(app);
+
+        server.listen('5000', '0.0.0.0', function onStart(err) {
+            if (err) {
+                console.log(err);
+            }
+            console.log('启动成功');
+        });
+    });
+    
+}
 
 
-// 创建应用服务器
-var server = http.createServer(app);
 
-reload(server, app);
 
-server.listen('5000', '0.0.0.0', function onStart(err) {
-    if (err) {
-        console.log(err);
-    }
-    console.log('启动成功');
-});
+
+
 
 
 

@@ -8,13 +8,12 @@ import Layout from './layout/Layout.js';
 class Index extends Component {
 
     static propTypes = {
-        domain: PropTypes.object,
         data: PropTypes.object
     }
 
     render() {
         let { domain, data } = this.props;
-        let indexJs = `${domain}/index.bundle.js`;
+        let indexJs = '/index/index.bundle.js';
         let title = '菲麦前端';
         let scriptUrls = [indexJs];
         return (
