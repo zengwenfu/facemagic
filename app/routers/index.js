@@ -6,20 +6,27 @@ import express from 'express';
 const router = express.Router();
 import { renderToString } from 'react-dom/server';
 import React from 'react';
-import Index from '../views/Index.js';
+import Index from '../universal/containers/Index.js';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import itemApp from '../universal/reducers/reducers.js';
+import Layout from './layout/Layout.js';
+
 
 //首页
 router.get('/', function(req, res, next) {
     // 创建新的 Redux store 实例
     const store = createStore(itemApp);
     
+    let indexJs = '/index/index.bundle.js';
+    let title = '菲麦前端';
+    let scriptUrls = [indexJs];
 
     let html = renderToString(
         <Provider store={store}>
-          <Index />
+            <Layout scriptUrls={scriptUrls} title={title}>
+             <Index />
+            </Layout>
         </Provider>
     );
 

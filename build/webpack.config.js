@@ -23,7 +23,7 @@ var hotMiddlewareScript = 'webpack-hot-middleware/client?reload=true';
  */
 var entryMap = {
     'index/index': [ROOT_PATH + '/app/client/pages/index/index.js'],
-    'lib': ['react', 'react-dom']
+    'lib': ['react', 'react-dom', 'redux', 'react-redux']
 }
 
 // 开发环境 增加热更新配置

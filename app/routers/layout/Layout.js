@@ -52,7 +52,6 @@ class Layout extends Component {
           <title>{title}</title>
         </head>
         <body>
-          <div id='app'></div>
           {children}
           ###initState###
           {this.renderScripts()}

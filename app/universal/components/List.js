@@ -8,7 +8,7 @@ export default class List extends Component {
         return (
             <ul>
                {this.props.list.map((item, index) =>
-                   <li>item.name</li>
+                   <li>{item.name}</li>
                 )}
             </ul>
         );

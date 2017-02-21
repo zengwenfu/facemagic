@@ -15,7 +15,7 @@ export default class AddItem extends Component {
     handleClick(e) {
         const node = this.refs.input;
         const name = node.value.trim();
-        this.props.onAddClick(text);
+        this.props.onAddClick(name);
         node.value = '';
     }
 
