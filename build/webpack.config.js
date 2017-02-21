@@ -70,8 +70,8 @@ if(env === 'dev') {
 module.exports = {
     entry: entryMap,
     output: {
-        path: DIST_PATH + '/' + VERSION,
-        filename: '[name].bundle.js',
+        path: DIST_PATH,
+        filename: VERSION + '/[name].bundle.js',
         publicPath: process.host
     },
     module: {

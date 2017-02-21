@@ -29,9 +29,9 @@ class Layout extends Component {
     /**
      *  开发环境增加reload监听（后台重启的时候能自动刷新）
      */
-    if(process.env.NODE_ENV === 'dev') {
-      items.push(<script  src={'/reload/reload.js'} />);
-    }
+    // if(process.env.NODE_ENV === 'dev') {
+    //   items.push(<script  src={'/reload/reload.js'} />);
+    // }
 
     return items;
   }
@@ -52,7 +52,9 @@ class Layout extends Component {
           <title>{title}</title>
         </head>
         <body>
+          <div id='app'></div>
           {children}
+          ###initState###
           {this.renderScripts()}
         </body>
       </html>

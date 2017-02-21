@@ -54,8 +54,8 @@ if(env === 'dev') {
     // 创建应用服务器
     var server = http.createServer(app);
 
-    // 服务器重启，刷新前端界面
-    reload(server, app);
+    // 服务器重启，刷新前端界面(暂时先不启动了，太费内存了)
+    // reload(server, app);
 
     server.listen('5000', '0.0.0.0', function onStart(err) {
         if (err) {

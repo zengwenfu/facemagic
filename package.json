@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=dev supervisor -i app/client app/app.js",
+    "start": "cross-env NODE_ENV=dev node app/app.js",
     "prd": "cross-env NODE_ENV=prd node app/app.js"
   },
   "repository": {
