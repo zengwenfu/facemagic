@@ -5,7 +5,7 @@ export default class AddItem extends Component {
         return (
             <div>
                 <input type='text' ref='input'/>
-                <button onClick={(e) => this.handleClick(e)}>
+                <button className='button' onClick={(e) => this.handleClick(e)}>
                     增加
                 </button>
             </div>
